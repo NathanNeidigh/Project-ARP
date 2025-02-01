@@ -35,7 +35,7 @@ Setup the ros workspace.
 
 ```
 cd ~
-mkdir dev_ws/src
+mkdir -p dev_ws/src
 cd dev_ws/src
 git clone git@github.com:NathanNeidigh/SCAR-System.git
 cd ..
