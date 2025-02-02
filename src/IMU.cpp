@@ -3,30 +3,51 @@
 #include <string>
 
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
-
-using namespace std::chrono_literals;
+#include "sensor_msgs/msg/imu.hpp"
 
 class IMU : public rclcpp::Node
 {
 public:
-  explicit IMU(int node_number)
-  : Node("IMU_" + std::to_string(node_number)), count_(0)
-  {
-    publisher_ = this->create_publisher<std_msgs::msg::String>("IMU_" + std::to_string(node_number), 10);
-    timer_ = this->create_wall_timer(
-      500ms, std::bind(&IMU::timer_callback, this));
-  }
+	explicit IMU() : Node("IMU")
+	{
+		publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("IMU", 10);
+		timer_ = this->create_wall_timer(std::chrono::milliseconds(100),
+										 std::bind(&IMU::publish_imu_data, this));
+	}
 
 private:
-  void timer_callback()
-  {
-    auto message = std_msgs::msg::String();
-    message.data = "Hello, world! " + std::to_string(count_++);
-    RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
-    publisher_->publish(message);
-  }
-  rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
-  size_t count_;
+	void publish_imu_data()
+	{
+		auto msg = sensor_msgs::msg::Imu();
+		msg.header.stamp = this->now();
+		msg.header.frame_id = "imu_link";
+
+		// Example values (replace with real sensor readings)
+		msg.orientation.x = 0.0;
+		msg.orientation.y = 0.0;
+		msg.orientation.z = 0.0;
+		msg.orientation.w = 1.0;
+
+		msg.angular_velocity.x = 0.1;
+		msg.angular_velocity.y = 0.2;
+		msg.angular_velocity.z = 0.3;
+
+		msg.linear_acceleration.x = 0.0;
+		msg.linear_acceleration.y = 9.81; // Simulating gravity
+		msg.linear_acceleration.z = 0.0;
+
+		publisher_->publish(msg);
+		RCLCPP_INFO(this->get_logger(), "Published IMU data.");
+	}
+	rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr publisher_;
+	rclcpp::TimerBase::SharedPtr timer_;
 };
+
+int main(int argc, char **argv)
+{
+	rclcpp::init(argc, argv);
+	auto node = std::make_shared<IMU>();
+	rclcpp::spin(node);
+	rclcpp::shutdown();
+	return 0;
+}

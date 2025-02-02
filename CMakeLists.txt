@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(Project-ARP)
+project(project-arp)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
@@ -13,20 +13,23 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
 add_executable(IMU src/IMU.cpp)
-ament_target_dependencies(IMU rclcpp std_msgs)
+add_executable(Encoder src/Encoder.cpp)
+ament_target_dependencies(IMU rclcpp sensor_msgs)
+ament_target_dependencies(Encoder rclcpp sensor_msgs)
 
 install(TARGETS
   IMU
-  DESTINATION lib/${Project-ARP})
+  Encoder
+  DESTINATION lib/project-arp)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
   # uncomment the line when a copyright and license is not present in all source files
-  #set(ament_cmake_copyright_FOUND TRUE)
+  set(ament_cmake_copyright_FOUND TRUE)
   # the following line skips cpplint (only works in a git repo)
   # uncomment the line when this package is not in a git repo
   #set(ament_cmake_cpplint_FOUND TRUE)
@@ -34,3 +37,4 @@ if(BUILD_TESTING)
 endif()
 
 ament_package()
+linear_acceleration
