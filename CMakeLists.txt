@@ -37,4 +37,3 @@ if(BUILD_TESTING)
 endif()
 
 ament_package()
-linear_acceleration
