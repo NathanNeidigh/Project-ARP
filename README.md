@@ -37,7 +37,8 @@ Setup the ros workspace.
 cd ~
 mkdir -p dev_ws/src
 cd dev_ws/src
-git clone git@github.com:NathanNeidigh/SCAR-System.git
+git clone git@github.com:NathanNeidigh/Project-ARP.git
+mv Project-ARP/ project-arp
 cd ..
 colcon build --symlink-install
 ```
