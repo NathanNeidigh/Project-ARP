@@ -39,6 +39,38 @@ mkdir -p dev_ws/src
 cd dev_ws/src
 git clone git@github.com:NathanNeidigh/Project-ARP.git
 mv Project-ARP/ project-arp
-cd ..
+```
+
+### Install Airsim Packages
+
+Navigate back to your home directory and clone AirSim, build, and copy the ros packages into our workspace.
+
+```
+git clone https://github.com/Microsoft/AirSim.git
+cd Airsim
+./setup.sh
+./build.sh
+cp -r ros2/src/airsim_interfaces/ ~/dev_ws/src/
+cp -r ros2/src/airsim_ros_pkgs/ ~/dev_ws/src/
+```
+
+Navigate back to your ROS workspace (dev_ws/) and manually install some dependecies
+
+```
+sudo apt-get install ros-foxy-geographic-msgs
+sudo apt-get install ros-foxy-mavros-msgs
+sudo apt-get install libyaml-cpp-dev
+```
+
+Then change line 26 of dev_ws/src/airsim_ros_pkgs/CMakeLists.txt to set(AIRSIM_ROOT "$ENV{HOME}/AirSim").
+
+```
 colcon build --symlink-install
 ```
+
+Also install Eigen from their official website.
+
+Changed airsim_ros_wrapper.cpp
+auto transformStampedENU = tf_buffer_->lookupTransform(AIRSIM_FRAME_ID, vehicle_name, rclcpp::Time(0), rclcpp::Duration::from_nanoseconds(1)); 
+to 
+auto transformStampedENU = tf_buffer_->lookupTransform(AIRSIM_FRAME_ID, vehicle_name, rclcpp::Time(0), rclcpp::Duration(std::chrono::nanoseconds(1)));
