@@ -54,23 +54,47 @@ cp -r ros2/src/airsim_interfaces/ ~/dev_ws/src/
 cp -r ros2/src/airsim_ros_pkgs/ ~/dev_ws/src/
 ```
 
-Navigate back to your ROS workspace (dev_ws/) and manually install some dependecies
+Navigate back to your Home directory (~/) and manually install some dependecies
 
 ```
 sudo apt-get install ros-foxy-geographic-msgs
 sudo apt-get install ros-foxy-mavros-msgs
 sudo apt-get install libyaml-cpp-dev
+wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz\
+tar -zxvf eigen-3.4.0.tar.gz
 ```
 
-Then change line 26 of dev_ws/src/airsim_ros_pkgs/CMakeLists.txt to set(AIRSIM_ROOT "$ENV{HOME}/AirSim").
+Install Eigen
+
+```
+cd eigen-3.4.0
+mkdir build
+cd build
+cmake ..
+sudo make install
+cd ..
+cd ..
+rm -r eigen-3.4.0
+rm eigen-3.4.0.tar.gz
+```
+
+
+Then open up dev_ws/src/airsim_ros_pkgs/CMakeLists.txt in your text editor and make the following changes:
+```
+set(AIRSIM_ROOT "$ENV{HOME}/AirSim") # Line 27: routes CMake to where we installed AirSim.
+
+/usr/local/include/eigen3 # Line 44: routes CMake to where we installed Eigen.
+```
+
+Then open up dev_ws/src/airsim_ros_pkgs/include/airsim_ros_wrapper.cpp in your text editor and make the following changes:
+
+```
+# Replace
+auto transformStampedENU = tf_buffer_->lookupTransform(AIRSIM_FRAME_ID, vehicle_name, rclcpp::Time(0), rclcpp::Duration::from_nanoseconds(1));
+# With
+auto transformStampedENU = tf_buffer_->lookupTransform(AIRSIM_FRAME_ID, vehicle_name, rclcpp::Time(0), rclcpp::Duration(std::chrono::nanoseconds(1)));
+```
 
 ```
 colcon build --symlink-install
 ```
-
-Also install Eigen from their official website.
-
-Changed airsim_ros_wrapper.cpp
-auto transformStampedENU = tf_buffer_->lookupTransform(AIRSIM_FRAME_ID, vehicle_name, rclcpp::Time(0), rclcpp::Duration::from_nanoseconds(1)); 
-to 
-auto transformStampedENU = tf_buffer_->lookupTransform(AIRSIM_FRAME_ID, vehicle_name, rclcpp::Time(0), rclcpp::Duration(std::chrono::nanoseconds(1)));
