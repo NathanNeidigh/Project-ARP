@@ -1,7 +1,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
-#include <geometry_msgs/msg/pose.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 
 class StateEstimator : public rclcpp::Node
 {
@@ -12,7 +12,7 @@ public:
 			"IMU", 10, std::bind(&StateEstimator::imu_topic_callback, this, std::placeholders::_1));
 		encoder_subscriber_ = this->create_subscription<sensor_msgs::msg::JointState>(
 			"encoder", 10, std::bind(&StateEstimator::encoder_topic_callback, this, std::placeholders::_1));
-		state_ = this->create_publisher<geometry_msgs::msg::Pose>("state", 10);
+		state_publisher_ = this->create_publisher<nav_msgs::msg::Odometry>("state", 10);
 	}
 private:
 	void imu_topic_callback(const sensor_msgs::msg::Imu::SharedPtr msg) const
@@ -28,7 +28,7 @@ private:
 
 	rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_subscriber_;
 	rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr encoder_subscriber_;
-	rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr state_;
+	rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr state_publisher_;
 };
 
 int main(int argc, char **argv)

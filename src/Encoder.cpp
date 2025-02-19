@@ -10,8 +10,7 @@ public:
     explicit Encoder(const std::string& name) : Node("encoder_" + name), name_(name)
     {
         publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("encoder_" + name + "_data", 10);
-        timer_ = this->create_wall_timer(std::chrono::milliseconds(100),
-                                         std::bind(&Encoder::publish_encoder_data, this));
+        // airsim_subscriber_ = this->create_subscription<TODO>()
     }
 
 private:
@@ -34,6 +33,7 @@ private:
     std::string name_;
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr publisher_;
     rclcpp::TimerBase::SharedPtr timer_;
+    // rclcpp::Subscription<TODO>::SharedPtr airsim_subscriber_; // TODO
 };
 
 int main(int argc, char **argv)

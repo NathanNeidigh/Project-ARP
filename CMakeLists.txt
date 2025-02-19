@@ -15,6 +15,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 
 # Add include directories
 include_directories(
@@ -31,8 +32,8 @@ add_executable(StateEstimator src/StateEstimator.cpp)
 ament_target_dependencies(IMU rclcpp sensor_msgs)
 ament_target_dependencies(Encoder rclcpp sensor_msgs)
 ament_target_dependencies(DriveTrain rclcpp geometry_msgs)
-ament_target_dependencies(PathPlanner rclcpp geometry_msgs)
-ament_target_dependencies(StateEstimator rclcpp sensor_msgs geometry_msgs)
+ament_target_dependencies(PathPlanner rclcpp geometry_msgs nav_msgs)
+ament_target_dependencies(StateEstimator rclcpp sensor_msgs nav_msgs)
 
 install(TARGETS
   IMU

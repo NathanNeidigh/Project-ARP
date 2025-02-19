@@ -11,8 +11,8 @@ public:
 	explicit IMU() : Node("IMU")
 	{
 		publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("IMU", 10);
-		timer_ = this->create_wall_timer(std::chrono::milliseconds(100),
-										 std::bind(&IMU::publish_imu_data, this));
+		airsim_subscriber_ = this->create_subscription<sensor_msgs::msg::Imu>(
+			"airsim_imu", 10, std::bind(&IMU::topic_callback, this, std::placeholders::_1));
 	}
 
 private:
@@ -39,8 +39,20 @@ private:
 		publisher_->publish(msg);
 		RCLCPP_INFO(this->get_logger(), "Published IMU data.");
 	}
+
+	void airsim_publish_imu_data(sensor_msgs::msg::Imu::SharedPtr msg) const
+	{
+		publisher_->publish(*msg);
+		RCLCPP_INFO(this->get_logger(), "Published IMU data.");
+	}
+
+	void topic_callback(const sensor_msgs::msg::Imu::SharedPtr msg) const
+	{
+		RCLCPP_INFO(this->get_logger(), "Received IMU message: linear_acceleration.y: '%f'", msg->linear_acceleration.y);
+		airsim_publish_imu_data(msg);
+	}
 	rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr publisher_;
-	rclcpp::TimerBase::SharedPtr timer_;
+	rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr airsim_subscriber_;
 };
 
 int main(int argc, char **argv)

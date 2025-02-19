@@ -20,21 +20,27 @@ Navigate to your documents folder and you should see an AirSim subdirectory. Ope
 
 ```json
 {
-  "SeeDocsAt": "https://github.com/Microsoft/AirSim/blob/main/docs/settings.md",
-  "SettingsVersion": 1.2,
-  "SimMode": "Car",
-  "Vehicles": {
-    "RaceCar": {
-      "VehicleType": "PhysXCar",
-      "UseSerial": false,
-      "UseTcp": true,
-      "QgcHostIp": "",
-      "TcpPort": 4560,
-      "ControlIp": "172.21.80.87",
-      "ControlPort": 14580,
-      "LocalHostIp": "172.21.80.1"
+    "SeeDocsAt": "https://github.com/Microsoft/AirSim/blob/main/docs/settings.md",
+    "SettingsVersion": 1.2,
+    "SimMode": "Car",
+    "Vehicles": {
+        "RaceCar": {
+            "VehicleType": "PhysXCar",
+            "UseSerial": false,
+            "UseTcp": true,
+            "QgcHostIp": "",
+            "TcpPort": 4560,
+            "ControlIp": "172.21.80.87",
+            "ControlPort": 14580,
+            "LocalHostIp": "172.21.80.1",
+            "Sensors": {
+                "Imu": {
+                    "SensorType": 2,
+                    "Enabled": true
+                }
+            }
+        }
     }
-  }
 }
 ```
 
@@ -118,7 +124,7 @@ Open up your .bashrc file in a text editor and append the following lines. Chang
 ```bash
 source ~/dev_ws/install/setup.bash
 cd ~/dev_ws
-export WSL_HOST_IP=172.21.80.1
+export WSL_HOST_IP=172.21.80.1 # Set this to whatever your windows system thinks the ip address of WSL is.
 ```
 
 ### Build and run the current deployment
