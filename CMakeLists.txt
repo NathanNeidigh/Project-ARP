@@ -16,12 +16,14 @@ find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(airsim_interfaces REQUIRED)
 
 # Add include directories
 include_directories(
   ${rclcpp_INCLUDE_DIRS}
   ${sensor_msgs_INCLUDE_DIRS}
   ${geometry_msgs_INCLUDE_DIRS}
+  ${airsim_interfaces_INCLUDE_DIRS}
 )
 
 add_executable(IMU src/IMU.cpp)
@@ -31,7 +33,7 @@ add_executable(PathPlanner src/PathPlanner.cpp)
 add_executable(StateEstimator src/StateEstimator.cpp)
 ament_target_dependencies(IMU rclcpp sensor_msgs)
 ament_target_dependencies(Encoder rclcpp sensor_msgs)
-ament_target_dependencies(DriveTrain rclcpp geometry_msgs)
+ament_target_dependencies(DriveTrain rclcpp airsim_interfaces geometry_msgs)
 ament_target_dependencies(PathPlanner rclcpp geometry_msgs nav_msgs)
 ament_target_dependencies(StateEstimator rclcpp sensor_msgs nav_msgs)
 

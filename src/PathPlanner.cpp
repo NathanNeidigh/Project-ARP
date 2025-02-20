@@ -9,20 +9,20 @@ class PathPlanner : public rclcpp::Node
 public:
 	explicit PathPlanner() : Node("PathPlanner")
 	{
-		publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);
+		publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("Car_Commands", 10);
 		subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
 			"state", 10, std::bind(&PathPlanner::topic_callback, this, std::placeholders::_1));
-		timer_ = this->create_wall_timer(std::chrono::milliseconds(100),
+		timer_ = this->create_wall_timer(std::chrono::milliseconds(1000),
 										 std::bind(&PathPlanner::publish_cmds, this));
 	}
 private:
 	void publish_cmds()
 	{
 		auto msg = geometry_msgs::msg::Twist();
-		msg.linear.x = 0.1;
-		msg.angular.z = 0.1;
+		msg.linear.x = 1.0;
+		msg.angular.z = 0.0;
 		publisher_->publish(msg);
-		RCLCPP_INFO(this->get_logger(), "Published Twist message.");
+		RCLCPP_INFO(this->get_logger(), "Published CarCommands message: linear.x: '%f', angular.z: '%f'", msg.linear.x, msg.angular.z);
 	}
 
 	void topic_callback(const nav_msgs::msg::Odometry::SharedPtr msg) const
