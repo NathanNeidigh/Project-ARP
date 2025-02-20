@@ -12,7 +12,7 @@ public:
 	{
 		publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("IMU", 10);
 		airsim_subscriber_ = this->create_subscription<sensor_msgs::msg::Imu>(
-			"airsim_imu", 10, std::bind(&IMU::topic_callback, this, std::placeholders::_1));
+			"/airsim_node/RaceCar/imu/Imu", 10, std::bind(&IMU::topic_callback, this, std::placeholders::_1));
 	}
 
 private:
